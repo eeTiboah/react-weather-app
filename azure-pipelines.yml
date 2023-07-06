@@ -1,0 +1,40 @@
+# Node.js with React
+# Build a Node.js project that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+pool: mypool
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
+
+- task: CopyFiles@2
+  displayName: copy files to artifacts
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/build'
+    Contents: '**'
+    TargetFolder: '$(System.ArtifactsDirectory)'
+      
+- task: PublishBuildArtifacts@1
+  displayName: publish artifact
+  inputs:
+    PathtoPublish: '$(System.ArtifactsDirectory)'
+    ArtifactName: 'react_app'
+    publishLocation: 'Container'
+
+- script: |
+    docker build -t reactweatherapp .
+    docker tag reactweatherapp tibbsdocker/reactweatherapp:v1
+    docker push tibbsdocker/reactweatherapp:v1
+  displayName: Push image to dockerhub

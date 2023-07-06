@@ -6,8 +6,7 @@
 trigger:
 - master
 
-pool: 
-  vmImage: ubuntu-latest
+pool: mypool
 
 steps:
 - task: NodeTool@0
@@ -37,22 +36,6 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'docker_hub_test'
-    command: 'login'
-
-- task: Docker@2
-  inputs:
-    containerRegistry: 'docker_hub_test'
     repository: 'newreactweatherapp'
-    command: 'build'
+    command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
-
-- task: Docker@2
-  inputs:
-    containerRegistry: 'docker_hub_test'
-    repository: 'newreactweatherapp'
-    command: 'push'
-
-- task: Docker@2
-  inputs:
-    containerRegistry: 'docker_hub_test'
-    command: 'logout'

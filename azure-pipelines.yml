@@ -33,8 +33,9 @@ steps:
     ArtifactName: 'react_app'
     publishLocation: 'Container'
 
-- script: |
-    docker build -t reactweatherapp .
-    docker tag reactweatherapp tibbsdocker/reactweatherapp:v1
-    docker push tibbsdocker/reactweatherapp:v1
-  displayName: Push image to dockerhub
+- task: Docker@2
+  inputs:
+    containerRegistry: 'docker_hub_test'
+    repository: 'newreactweatherapp'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'

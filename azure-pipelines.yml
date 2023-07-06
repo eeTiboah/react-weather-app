@@ -36,6 +36,10 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'docker_hub_test'
-    repository: 'newreactweatherapp'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
+    command: 'login'
+
+- script: |
+        docker build -t newreactweatherapp .
+        docker tag newreactweatherapp tibbsdocker/newreactweatherapp
+        docker push tibbsdocker/newreactweatherapp
+  displayName: Push image to dockerhub
